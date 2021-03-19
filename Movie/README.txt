@@ -1,5 +1,5 @@
 01.Run Server:
- - open folder named server in cmd
+ - open folder server in cmd
  - type "node server.js"  
 02.Run lite-server
  -open movies folder in VSC(for example)
