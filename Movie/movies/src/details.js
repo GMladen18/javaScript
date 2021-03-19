@@ -1,4 +1,3 @@
-import { showCreate } from "./create.js";
 import { crtElement } from "./dom.js";
 import { showEdit } from "./edit.js";
 import {showHome} from './home.js'
@@ -55,51 +54,6 @@ async function onDelete(e , id){
     }
 }
 
-async function onEdit(e , movie){
-    e.preventDefault();
-    showEdit();
-    let id = movie._id;
-    let title = document.getElementById('titleEdit');
-    let description = document.getElementById('descriptionEdit');
-    let img = document.getElementById('imageEdit');
-    title.value = movie.title;
-    description.value = movie.description;
-    img.value = movie.img;
-    document.getElementById('formEdit').addEventListener('submit', async (e)=>{
-        e.preventDefault();
-        const form = new FormData(e.target);
-    
-        const movie = {
-             title : form.get('title'),
-             description : form.get('description'),
-             img: form.get('imageUrl')
-        }
-    
-        if (movie.title == '' || movie.description== '' || movie.img == ''){
-            alert('All fields are requered!')
-        }
-        let confirmed = confirm('Are you sure you want to change content of this movie?');
-        if (confirmed){
-            const url = 'http://localhost:3030/data/movies/' + id;
-            const response = await fetch(url, {
-                method : 'put',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Authorization': sessionStorage.getItem('authToken'),
-                } ,
-                body: JSON.stringify(movie)
-            });
-            if (response.ok){
-                showDetails(id);
-            }
-        }
-    })
-
-
-
-      
-
-}
 
 function createMovie(movie, like , ownLike) {
     const userId = sessionStorage.getItem('userId');
@@ -120,7 +74,7 @@ function createMovie(movie, like , ownLike) {
     if (userId) {
         if (userId == movie._ownerId) {
             controls.appendChild(crtElement('a', { className: "btn btn-danger", href: "#" , onclick:(e)=>onDelete(e, movie._id)}, "Delete"))
-            controls.appendChild(crtElement('a', { className: "btn btn-warning", href: "#" , onclick: (e)=> onEdit(e, movie)}, "Edit"))
+            controls.appendChild(crtElement('a', { className: "btn btn-warning", href: "#" , onclick: (e)=> showEdit(e, movie)}, "Edit"))
 
         } else if (ownLike==0) {
             controls.appendChild(crtElement('a', { className: "btn btn-primary", href: "#", onclick: likeMovie}, "Like"))
